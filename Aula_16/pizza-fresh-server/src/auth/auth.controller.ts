@@ -1,5 +1,6 @@
-import { Post, Controller, Body, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Post, Controller, Body, HttpCode, HttpStatus, Get, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginResponseDto } from './dto/login-response.dto';
 import { LoginDto } from './dto/login.dto';
@@ -16,5 +17,12 @@ export class AuthController {
   })
   login(@Body() loginDto: LoginDto): Promise<LoginResponseDto> {
     return this.authService.login(loginDto);
+  }
+
+  @Get()
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
+  profile() {
+    return { message: 'Autenticação bem sucedida' };
   }
 }
